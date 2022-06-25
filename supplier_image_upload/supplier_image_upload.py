@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 
-import requests
 import os
+import requests
 
-# This example shows how a file can be uploaded using the Python Requests Module
 url = "http://localhost/upload/"
-IMAGE_DIR = os.path.expanduser('~') + '/supplier-data/images'
-list_image = os.listdir(IMAGE_DIR)
-jpeg_images = [image_name for image_name in list_image if '.jpeg' in image_name]
 
-for image in jpeg_images:
-    with open(IMAGE_DIR + image, 'rb') as opened:
-        r = requests.post(url, files={'file': opened})
+USER = os.getenv('USER')
+
+image_directory = '/home/{}/supplier-data/images/'.format(USER)
+files = os.listdir(image_directory)
+
+for image_name in files:
+    if not image_name.startswith('.') and 'jpeg' in image_name:
+        image_path = image_directory + image_name
+        with open(image_path, 'rb') as opened:
+            r = requests.post(url, files={'file': opened})
